@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All Users</title>
+</head>
+<body>
+
+<div>
+    <th:block th:each="user : ${users}">
+        <a th:href="@{/admin/user(id=${user.getId()})}" th:text="|${user.getId()}. ${user.getUsername()} |"></a>
+        <br/>
+    </th:block>
+</div>
+<br/>
+<a th:href="@{/admin/new}" style="font-size: 20px; background-color: #37ff00; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Add user</a>
+<br/><br/><br/>
+<a th:href="@{/logout}" style="font-size: 20px; background-color: #ff0000; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Logout</a>
+
+</body>
+</html>
