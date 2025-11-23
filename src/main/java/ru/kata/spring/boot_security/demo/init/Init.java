@@ -7,7 +7,8 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
-import java.util.stream.Collectors;
+import java.util.List;
+
 
 @Component
 public class Init {
@@ -22,9 +23,26 @@ public class Init {
 
     @PostConstruct
     private void init() {
-        roleRepository.save(new Role(1L, "ROLE_ADMIN"));
-        roleRepository.save(new Role(2L, "ROLE_USER"));
-        userService.save(new User("admin", "admin", "admin", 33, "admin@mail.ru", "admin", roleRepository.findAll()));
-        userService.save(new User("user", "user", "user", 25, "user@mail.ru", "user", roleRepository.findById(2L).stream().collect(Collectors.toList())));
+        // Создаем роли если их нет
+        if (!roleRepository.existsById(1L))
+            roleRepository.save(new Role(1L, "ROLE_ADMIN"));
+        if (!roleRepository.existsById(2L))
+            roleRepository.save(new Role(2L, "ROLE_USER"));
+
+        // Создаем админа
+        if (!userService.existByEmail("admin@mail.ru")) {
+            User admin = new User("admin", "admin", "admin", 33, "admin@mail.ru", "admin");
+            // Передаем ID ролей (1L и 2L)
+            List<Long> adminRoleIds = List.of(1L, 2L);
+            userService.save(admin, adminRoleIds);
+        }
+
+        // Создаем пользователя
+        if (!userService.existByEmail("user@mail.ru")) {
+            User user = new User("user", "user", "user", 25, "user@mail.ru", "user");
+            // Передаем ID роли USER (2L)
+            List<Long> userRoleIds = List.of(2L);
+            userService.save(user, userRoleIds);
+        }
     }
 }

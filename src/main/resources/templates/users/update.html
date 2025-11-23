@@ -26,15 +26,19 @@
   <input type="text" id="email" th:field="*{email}">
   <br/>
   <p>
-    <label>Roles:
-      <input type="checkbox" name="roles"
-             th:each="role : ${user.getRoles()}"
+
+  <div th:if="${allRoles != null}">
+    <label>Roles:</label>
+    <div th:each="role : ${allRoles}">
+      <input type="checkbox"
+             th:id="'role_' + ${role.id}"
              th:text="${role.getRole()}"
-             th:value="${role.getId()}"
-             th:field="*{roles}"
-      />
-    </label>
-  </p>
+             th:value="${role.id}"
+             name="roleIds">
+      <label th:for="'role_' + ${role.id}" th:text="${role.name}"></label>
+    </div>
+  </div>
+
   <input type="submit" value="Update">
 </form>
 

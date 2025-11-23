@@ -3,11 +3,10 @@ package ru.kata.spring.boot_security.demo.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -42,12 +41,12 @@ public class User implements UserDetails {
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String name, String surname, Integer age, String email, String password, List<Role> roles) {
+    public User(String username, String name, String surname, Integer age, String email, String password, Set<Role> roles) {
         this.username = username;
         this.name = name;
         this.surname = surname;
@@ -66,11 +65,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

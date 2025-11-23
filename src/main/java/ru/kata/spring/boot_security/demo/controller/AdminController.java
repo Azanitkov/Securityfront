@@ -27,36 +27,42 @@ public class AdminController {
     }
 
     @GetMapping("/user")
-    public String showUser(@RequestParam(value = "id") Long id, Model model) {
-        model.addAttribute("user", userService.findOne(id));
-        return "user";
+    public String showUser(@RequestParam(value = "id") Long id, Model model)  {
+        User user =userService.findOne(id);
+        List<Role> allRoles = roleRepository.findAll();
+        model.addAttribute("user", user);
+        model.addAttribute("allRoles",allRoles);
+        return "users/user";
     }
 
     @GetMapping("/new")
-    public String createUserForm(@ModelAttribute("user") User user) {
-        List<Role> roles = roleRepository.findAll();
-        user.setRoles(roles);
+    public String createUserForm(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("allRoles", roleRepository.findAll());
         return "users/new";
     }
 
     @PostMapping()
-    public String addUser(@ModelAttribute("user") User user) {
-        userService.save(user);
+    public String addUser(@ModelAttribute("user") User user, @RequestParam("roleIds") List<Long> roleIds) {
+        userService.save(user, roleIds);
         return "redirect:/admin";
     }
 
     @GetMapping("/update")
     public String createUpdateForm(@RequestParam(value = "id") Long id, Model model) {
-        List<Role> roles = roleRepository.findAll();
         User user = userService.findOne(id);
-        user.setRoles(roles);
-        model.addAttribute("user", userService.findOne(id));
+        List<Role> allRoles = roleRepository.findAll();
+        model.addAttribute("user", user);
+        model.addAttribute("allRoles", allRoles);
         return "users/update";
     }
 
+
     @PostMapping("/user")
-    public String updateUser(@RequestParam(value = "id") Long id, @ModelAttribute("user") User user) {
-        userService.update(id, user);
+    public String updateUser(@RequestParam("id") Long id,
+                             @ModelAttribute("user") User user,
+                             @RequestParam(value = "roleIds", required = false) List<Long> roleIds) {
+        userService.update(id, user, roleIds);
         return "redirect:/admin";
     }
 
