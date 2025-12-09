@@ -38,9 +38,9 @@
 <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
             <span class="navbar-text text-white">
-                <span sec:authentication="principal.username">admin@mail.ru</span>
+                <span sec:authentication="principal.username"></span>
                 with roles:
-                <span sec:authentication="principal.authorities">ADMIN</span>
+                <span sec:authentication="principal.authorities"></span>
             </span>
         <form th:action="@{/logout}" method="post" class="mb-0">
             <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
