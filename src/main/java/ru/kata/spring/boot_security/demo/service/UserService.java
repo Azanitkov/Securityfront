@@ -10,12 +10,20 @@ import java.util.Set;
 @Service
 public interface UserService {
     List<User> findAll();
+
     User findOne(Long id);
-    void save(User user,List<Long> rolesIds );
+
+    void save(User user, List<Long> rolesIds);
+
     void update(Long id, User user, List<Long> rolesIds);
+
     void delete(Long id);
-    User findByUsername(String username);
+
     Set<Role> getRolesByIds(List<Long> rolesIds);
-    Boolean existByEmail (String email);
+
+    Boolean existByEmail(String email);
+
+    User getByEmail(String email);
+
 
 }

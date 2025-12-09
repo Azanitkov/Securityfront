@@ -12,14 +12,16 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    public String getFormattedRoles(){
+        return this.roles.stream()
+                .map(role -> role.getRole().replace("ROLE_",""))
+                .collect(Collectors.joining(", "));
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Column(name = "username", unique = true, nullable = false)
-    private String username;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -36,7 +38,7 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -46,8 +48,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String username, String name, String surname, Integer age, String email, String password, Set<Role> roles) {
-        this.username = username;
+    public User( String name, String surname, Integer age, String email, String password, Set<Role> roles) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -56,8 +57,7 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public User(String username, String name, String surname, Integer age, String email, String password) {
-        this.username = username;
+    public User(String name, String surname, Integer age, String email, String password) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -113,9 +113,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -137,9 +134,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -152,6 +146,11 @@ public class User implements UserDetails {
         return password;
     }
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -161,19 +160,18 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(age, user.age) && Objects.equals(email, user.email);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(age, user.age) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, name, surname, age, email);
+        return Objects.hash(id, name, surname, age, email);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", age=" + age +

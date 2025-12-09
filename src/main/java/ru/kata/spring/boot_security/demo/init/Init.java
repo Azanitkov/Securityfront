@@ -31,7 +31,7 @@ public class Init {
 
         // Создаем админа
         if (!userService.existByEmail("admin@mail.ru")) {
-            User admin = new User("admin", "admin", "admin", 33, "admin@mail.ru", "admin");
+            User admin = new User("admin", "admin", 33, "admin@mail.ru", "admin");
             // Передаем ID ролей (1L и 2L)
             List<Long> adminRoleIds = List.of(1L, 2L);
             userService.save(admin, adminRoleIds);
@@ -39,7 +39,7 @@ public class Init {
 
         // Создаем пользователя
         if (!userService.existByEmail("user@mail.ru")) {
-            User user = new User("user", "user", "user", 25, "user@mail.ru", "user");
+            User user = new User( "user", "user", 25, "user@mail.ru", "user");
             // Передаем ID роли USER (2L)
             List<Long> userRoleIds = List.of(2L);
             userService.save(user, userRoleIds);

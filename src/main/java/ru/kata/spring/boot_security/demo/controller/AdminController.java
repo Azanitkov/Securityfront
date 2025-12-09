@@ -1,4 +1,5 @@
 package ru.kata.spring.boot_security.demo.controller;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -20,26 +21,29 @@ public class AdminController {
         this.roleRepository = roleRepository;
         this.userService = userService;
     }
+
     @GetMapping
     public String showAllUsers(ModelMap model) {
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("allRoles", roleRepository.findAll());
+        model.addAttribute("editUser", new User());
         return "users/users";
     }
 
     @GetMapping("/user")
-    public String showUser(@RequestParam(value = "id") Long id, Model model)  {
-        User user =userService.findOne(id);
+    public String showUser(@RequestParam(value = "id") Long id, Model model) {
+        User user = userService.findOne(id);
         List<Role> allRoles = roleRepository.findAll();
         model.addAttribute("user", user);
-        model.addAttribute("allRoles",allRoles);
+        model.addAttribute("user", new User());
         return "users/user";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/users")
     public String createUserForm(Model model) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", roleRepository.findAll());
-        return "users/new";
+        return "users/users";
     }
 
     @PostMapping()
@@ -60,7 +64,7 @@ public class AdminController {
 
     @PostMapping("/user")
     public String updateUser(@RequestParam("id") Long id,
-                             @ModelAttribute("user") User user,
+                             @ModelAttribute("editUser") User user,
                              @RequestParam(value = "roleIds", required = false) List<Long> roleIds) {
         userService.update(id, user, roleIds);
         return "redirect:/admin";
@@ -71,4 +75,6 @@ public class AdminController {
         userService.delete(id);
         return "redirect:/admin";
     }
+
+
 }

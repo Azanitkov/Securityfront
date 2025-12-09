@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.service;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
@@ -7,6 +9,8 @@ import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +55,6 @@ public class UserServiceImpl implements UserService {
         existingUser.setName(updatedUser.getName());
         existingUser.setSurname(updatedUser.getSurname());
         existingUser.setAge(updatedUser.getAge());
-        existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
 
         Set<Role> roles = getRolesByIds(rolesIds);
@@ -64,22 +67,23 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public User findByUsername(String username) {
-        return userRepository.findUserByUsername(username);
-    }
 
     @Override
     public Set<Role> getRolesByIds(List<Long> rolesIds) {
-       if (rolesIds == null || rolesIds.isEmpty()){
-           return new HashSet<>();
-       }
-       return new HashSet<>(roleRepository.findAllById(rolesIds));
+        if (rolesIds == null || rolesIds.isEmpty()) {
+            return new HashSet<>();
+        }
+        return new HashSet<>(roleRepository.findAllById(rolesIds));
     }
 
     @Override
     public Boolean existByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return userRepository.getByEmail(email);
     }
 
 }
